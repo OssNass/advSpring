@@ -89,7 +89,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
         if (this.controllerInfo.disableDelete())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
-            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).getFirst()));
+            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).get(0)));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
 
-            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).getFirst()));
+            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).get(0)));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (Exception e) {

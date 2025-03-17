@@ -1,4 +1,6 @@
 package io.ossnass.example.v1.book;
 
-public record BookDto(Integer id,String title) {
+import io.ossnass.example.v1.author.SimpleAuthorDto;
+
+public record BookDto(Integer id, String title, SimpleAuthorDto author) {
 }
