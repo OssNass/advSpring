@@ -104,7 +104,7 @@ Before you start, make sure you have the following installed:
    }
    ```
    
-   The `idFoeldCount` method is used to determine the number of fields in the id, in this case it is 1, the `partsToIdClass` method is used to convert the id parts as string to the suitable ID class
+   The `idFieldCount` method is used to determine the number of fields in the id, in this case it is 1, the `partsToIdClass` method is used to convert the id parts as string to the suitable ID class
 
    ```java
    @ControllerInfo(mapper = AuthorMapper.class)

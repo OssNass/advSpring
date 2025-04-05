@@ -20,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
  *     <li>{@link CRUDController#post(Dto)}: creates a new entity</li>
  *     <li>{@link CRUDController#put(Dto)}: edits an existing entity</li>
  *     <li>{@link CRUDController#delete(String)}: deletes an existing entity</li>
- *     <li>{@link CRUDController#softDelete(String)}: soft deletes an existing entity</li>
  * </ul>
  *
  * @param <Entity> the entity type
@@ -47,7 +46,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
         if (this.controllerInfo.disableAdd())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
-            return mapper.fromEntity((Entity) ((CRUDService) service).save(mapper.fromDto(dto)));
+            return mapper.fromEntity(((CRUDService<Entity, ID>) service).save(mapper.fromDto(dto)));
         } catch (EntityExistsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         } catch (Exception e) {
@@ -68,7 +67,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
         if (this.controllerInfo.disableEdit())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
-            return mapper.fromEntity((Entity) ((CRUDService) service).edit(mapper.fromDto(dto)));
+            return mapper.fromEntity(((CRUDService<Entity, ID>) service).edit(mapper.fromDto(dto)));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -89,7 +88,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
         if (this.controllerInfo.disableDelete())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
-            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).get(0)));
+            ((CRUDService<Entity, ID>) service).delete(service.getById(service.convertStringToIds(id.split(",")).get(0)));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -97,7 +96,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
         }
     }
 
-    /**
+    /*/**
      * Soft deletes an existing entity
      * <p>
      * If the entity doesn't exist, the {@link EntityNotFoundException} will be thrown
@@ -105,18 +104,18 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
      * @param id the id of the entity to softly delete
      * @throws ResponseStatusException with code 404 (not found) if the entity doesn't exist, code 500 if something goes wrong
      */
-    @DeleteMapping("/soft/{id}")
-    public void softDelete(@PathParam("id") String id) {
-        if (this.controllerInfo.disableSoftDelete())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        try {
-
-            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).get(0)));
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @DeleteMapping("/soft/{id}")
+//    public void softDelete(@PathParam("id") String id) {
+//        if (this.controllerInfo.disableSoftDelete())
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        try {
+//
+//            ((CRUDService) service).softDelete(service.getById(service.convertStringToIds(id.split(",")).get(0)));
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        } catch (Exception e) {
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 }

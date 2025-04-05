@@ -5,8 +5,6 @@ package io.ossnass.advSpring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -31,14 +29,15 @@ public class Loggable {
                 .getRemoteAddr();
     }
 
-    /**
+    /*/**
      * Returns the user of the request, requires a user to be logged in and the access token to be sent
      *
      * @return the user of the request
      */
-    protected UserDetails getUserOfRequest() {
-        return (UserDetails) SecurityContextHolder.getContext()
-                                                  .getAuthentication()
-                                                  .getPrincipal();
-    }
+    //DISABLED FOR NOT ENABLING SPRING BOOT SECURITY
+//    protected UserDetails getUserOfRequest() {
+//        return (UserDetails) SecurityContextHolder.getContext()
+//                                                  .getAuthentication()
+//                                                  .getPrincipal();
+//    }
 }

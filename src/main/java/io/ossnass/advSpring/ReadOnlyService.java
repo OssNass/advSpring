@@ -214,7 +214,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
                            .limit(count);
         if (logger.isDebugEnabled())
             logger.debug(stream.getDebugQueryString());
-        return stream.where(item -> !item.getDeleted());
+        return stream;
     }
 
     /**
@@ -223,8 +223,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
      * @param result the result of the stream
      * @param isAll  true if the stream is all, false if it is a paginated stream
      * @return the result of the stream
-     * @throws IllegalAccessException    when the method is not accessible
-     * @throws InvocationTargetException when the method calling throws an exception
+     * @throws ResponseStatusException in case of error
      */
     protected final List<Entity> executePostFetchHooks(List<Entity> result, boolean isAll) {
         if (!hooks.get(PostFetch.class).isEmpty()) {
@@ -263,8 +262,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
      *                                   <ul>
      *                                       <li>"Bad filter": in case of error in the filters</li>
      *                                   </ul>
-     * @throws IllegalAccessException    when the method is not accessible
-     * @throws InvocationTargetException when the method calling throws an exception
+     *                                   or error 500 in any other case
      */
     protected final FilterContainer executePreFetchHooks(String[] filters, String[] filterOperations,
                                                          String[] filterValues) {
@@ -405,7 +403,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
                 sort,
                 start,
                 count);
-
+        logger.info(stream.getDebugQueryString());
         //mapping the entities to DTOs
         var result = stream.toList();
         if (!hooks.get(PostFetch.class).isEmpty())
@@ -426,7 +424,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
      */
     public List<Entity> getOnes(String idString) {
         List<Id> ids = convertStringToIds(idString.split(","));
-        var result = repository.findAllById(ids).stream().filter(item -> !item.getDeleted()).toList();
+        var result = repository.findAllById(ids);
         if (!hooks.get(PostFetch.class).isEmpty())
             result = executePostFetchHooks(result, false);
         return result;

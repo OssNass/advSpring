@@ -25,7 +25,6 @@ import java.util.*;
  *         <ol>
  *             <li>save a new using {@link CRUDService#save(Deletable)}</li>
  *             <li>edits an existing using {@link CRUDService#edit(Deletable)}</li>
- *             <li>soft delete an existing using {@link CRUDService#softDelete(Deletable)}</li>
  *             <li>hard delete an existing using {@link CRUDService#delete(Deletable)}</li>
  *         </ol>
  *     </li>
@@ -77,7 +76,7 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
     public Entity save(Entity e) {
         Assert.notNull(e, "entity to add cannot be null");
         var id = extractId(e);
-        if (repository.existsById(id))
+        if (id !=null && repository.existsById(id))
             throw new EntityExistsException();
         var preAddHooks = hooks.get(PreAdd.class);
         var postAddHooks = hooks.get(PostAdd.class);
@@ -125,15 +124,15 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
         return updatedEntity;
     }
 
-    /**
-     * Performs a soft delete by setting {@link Entity#isDeletable} to true
-     *
-     * @param e the entity to softly delete
-     */
-    public void softDelete(Entity e) {
-        Assert.notNull(e, "entity to soft delete cannot be null");
-        edit((Entity) e.setIsDeletable(true));
-    }
+//    /**
+//     * Performs a soft delete by setting {@link Entity#isDeletable} to true
+//     *
+//     * @param e the entity to softly delete
+//     */
+//    public void softDelete(Entity e) {
+//        Assert.notNull(e, "entity to soft delete cannot be null");
+//        edit((Entity) e.setIsDeletable(true));
+//    }
 
     /**
      * Deletes an entity from the database
