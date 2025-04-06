@@ -1,13 +1,13 @@
 package io.ossnass.advSpring;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import io.ossnass.advSpring.annotations.ServiceInfo;
 import io.ossnass.advSpring.annotations.hooks.FilterContainer;
 import io.ossnass.advSpring.annotations.hooks.PostFetch;
 import io.ossnass.advSpring.annotations.hooks.PreFetch;
 import io.ossnass.advSpring.operators.Filter;
 import io.ossnass.advSpring.operators.Sort;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.jinq.jpa.JPAJinqStream;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -65,7 +65,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
         this.repository = repository;
         this.hooks = new HashMap<>();
         var serviceInfo = this.getClass()
-                              .getAnnotation(ServiceInfo.class);
+                .getAnnotation(ServiceInfo.class);
         Assert.notNull(serviceInfo,
                 "A service must be annotated with ServiceInfo");
 
@@ -89,8 +89,8 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
         tmpFilters.forEach(filters::put);
         sorts = new HashMap<>();
         filterService.getSorts(serviceInfo.id())
-                     .forEach((key, value) -> sorts.put(key,
-                             value));
+                .forEach((key, value) -> sorts.put(key,
+                        value));
     }
 
 
@@ -118,11 +118,11 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
         //we look for  mandatory filters
         var tmpMap = new HashMap<String, Filter<Entity>>();
         this.filters.entrySet()
-                    .stream()
-                    .filter(item -> item.getValue()
-                                        .isMandatory())
-                    .forEach(item -> tmpMap.put(item.getKey(),
-                            item.getValue()));
+                .stream()
+                .filter(item -> item.getValue()
+                        .isMandatory())
+                .forEach(item -> tmpMap.put(item.getKey(),
+                        item.getValue()));
 
         for (int i = 0; i < filters.length; i++) {
             //Now we check if the filter is in mandatory filters
@@ -159,8 +159,8 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
             var filter = (filters[i] + filterOperations[i]).toLowerCase();
             if (this.filters.containsKey(filter))
                 stream = this.filters.get(filter)
-                                     .addFilter(stream,
-                                             filterValues[i]);
+                        .addFilter(stream,
+                                filterValues[i]);
         }
         return stream;
     }
@@ -211,7 +211,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
                     "Bad pagination");
         if (start != null)
             stream = stream.skip(start)
-                           .limit(count);
+                    .limit(count);
         if (logger.isDebugEnabled())
             logger.debug(stream.getDebugQueryString());
         return stream;
@@ -258,11 +258,11 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
      * @param filterOperations the filter operations
      * @param filterValues     the filter values
      * @return the container with the filters applied
-     * @throws ResponseStatusException   with code 400 with the following messages:
-     *                                   <ul>
-     *                                       <li>"Bad filter": in case of error in the filters</li>
-     *                                   </ul>
-     *                                   or error 500 in any other case
+     * @throws ResponseStatusException with code 400 with the following messages:
+     *                                 <ul>
+     *                                     <li>"Bad filter": in case of error in the filters</li>
+     *                                 </ul>
+     *                                 or error 500 in any other case
      */
     protected final FilterContainer executePreFetchHooks(String[] filters, String[] filterOperations,
                                                          String[] filterValues) {
@@ -305,11 +305,11 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
      */
     private JPAJinqStream<Entity> proceessSorters(JPAJinqStream<Entity> stream, String sorting) {
         if (sorting != null && !sorting.trim()
-                                       .isEmpty()) {
+                .isEmpty()) {
             sorting = sorting.toLowerCase();
             if (this.sorts.containsKey(sorting))
                 stream = sorts.get(sorting)
-                              .sort(stream);
+                        .sort(stream);
             else
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Bad sort");
@@ -456,7 +456,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
                     //Method 1
                     var hookAnnotation = method.getAnnotation(hookClass);
                     try {
-                        var valueMethod =hookAnnotation.annotationType().getDeclaredMethod("value");
+                        var valueMethod = hookAnnotation.annotationType().getDeclaredMethod("value");
                         var order = (Integer) valueMethod.invoke(hookAnnotation);
                         if (hooks.get(hookClass).containsKey(order)) {
                             logger.error("Error during loading hooks in {} order {} already exists list {}",

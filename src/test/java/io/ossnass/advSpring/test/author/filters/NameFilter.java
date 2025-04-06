@@ -8,7 +8,7 @@ import io.ossnass.advSpring.test.author.Author;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.jinq.jpa.JPAJinqStream;
 
-@FilterInfo(fieldName = "name",operation = Operation.EQUALS,serviceId = "author")
+@FilterInfo(fieldName = "name", operation = Operation.EQUALS, serviceId = "author")
 public class NameFilter extends Filter<Author> {
     public NameFilter(SearchSession searchSession, JinqStreamService streamService) {
         super(searchSession, streamService);
@@ -16,6 +16,6 @@ public class NameFilter extends Filter<Author> {
 
     @Override
     public JPAJinqStream<Author> addFilter(JPAJinqStream<Author> stream, String value) {
-        return stream.where(item->item.getName().contains(value));
+        return stream.where(item -> item.getName().contains(value));
     }
 }

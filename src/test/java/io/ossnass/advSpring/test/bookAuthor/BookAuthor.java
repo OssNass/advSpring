@@ -16,17 +16,17 @@ import lombok.experimental.Accessors;
 @IdClass(BookAuthorId.class)
 public class BookAuthor extends Deletable {
     @Id
-    @Column(name = "book_id",nullable = false)
+    @Column(name = "book_id", nullable = false)
     private Integer bookId;
     @Id
-    @Column(name = "author_id",nullable = false)
+    @Column(name = "author_id", nullable = false)
     private Integer authorId;
 
     @ManyToOne(targetEntity = Book.class)
-    @JoinColumn(name = "book_id",insertable = false,updatable = false,referencedColumnName = "id")
+    @JoinColumn(name = "book_id", insertable = false, updatable = false, referencedColumnName = "id")
     private Book book;
 
     @ManyToOne(targetEntity = Author.class)
-    @JoinColumn(name = "author_id",insertable = false,updatable = false,referencedColumnName = "id")
+    @JoinColumn(name = "author_id", insertable = false, updatable = false, referencedColumnName = "id")
     private Author author;
 }

@@ -51,37 +51,37 @@ public class FilterAndSortInfoService {
     private void matchAllData() {
         logger.info("Starting the matching process between sorts,filters and controllers");
         try (var scan = new ClassGraph().enableClassInfo()
-                                        .enableAnnotationInfo()
-                                        .scan()) {
+                .enableAnnotationInfo()
+                .scan()) {
             for (var classInfo : scan.getClassesWithAnnotation(ServiceInfo.class)) {
                 logger.debug("Found controller: " + classInfo.loadClass()
-                                                             .getCanonicalName());
+                        .getCanonicalName());
                 var annotation = (ServiceInfo) classInfo.getAnnotationInfo(ServiceInfo.class.getCanonicalName())
-                                                        .loadClassAndInstantiate();
+                        .loadClassAndInstantiate();
                 Set<SortInfoInternal> controllerSortList = new HashSet<SortInfoInternal>();
                 if (this.sorts.containsKey(annotation.id()))
                     controllerSortList = this.sorts.get(annotation.id());
                 else this.sorts.put(annotation.id(), controllerSortList);
                 var cSortList = controllerSortList;
                 this._sorts.stream()
-                           .filter(item -> item.getControllerId()
-                                               .equals(annotation.id())
-                                   && cSortList.stream()
-                                               .noneMatch(value -> value.getId()
-                                                                        .equals(item.getId())))
-                           .forEach(cSortList::add);
+                        .filter(item -> item.getControllerId()
+                                .equals(annotation.id())
+                                && cSortList.stream()
+                                .noneMatch(value -> value.getId()
+                                        .equals(item.getId())))
+                        .forEach(cSortList::add);
                 Set<FilterInfoInternal> controllerFilterList = new HashSet<FilterInfoInternal>();
                 if (this.filters.containsKey(annotation.id()))
                     controllerFilterList = this.filters.get(annotation.id());
                 else this.filters.put(annotation.id(), controllerFilterList);
                 var cFilterList = controllerFilterList;
                 this._filters.stream()
-                             .filter(item -> item.getServiceId()
-                                                 .equals(annotation.id())
-                                     && cFilterList.stream()
-                                                   .noneMatch(value -> value.getId()
-                                                                            .equals(item.getId())))
-                             .forEach(cFilterList::add);
+                        .filter(item -> item.getServiceId()
+                                .equals(annotation.id())
+                                && cFilterList.stream()
+                                .noneMatch(value -> value.getId()
+                                        .equals(item.getId())))
+                        .forEach(cFilterList::add);
             }
         }
         logger.info("Matching process completed");
@@ -92,16 +92,16 @@ public class FilterAndSortInfoService {
         //we  scan for the all the sorts
         this._sorts = new ArrayList<SortInfoInternal>();
         try (var scan = new ClassGraph().enableClassInfo()
-                                        .enableAnnotationInfo()
-                                        .scan()) {
+                .enableAnnotationInfo()
+                .scan()) {
             for (var classInfo : scan.getClassesWithAnnotation(SortInfo.class)) {
                 var data = (SortInfo) classInfo.getAnnotationInfo(SortInfo.class.getCanonicalName())
-                                               .loadClassAndInstantiate();
+                        .loadClassAndInstantiate();
                 logger.debug("Found sort: " + classInfo.loadClass()
-                                                       .getCanonicalName());
+                        .getCanonicalName());
                 this._sorts.add(new SortInfoInternal()
                         .setId((data.fieldName() + data.sortingDirection()
-                                                       .getValue()).toLowerCase())
+                                .getValue()).toLowerCase())
                         .setControllerId(data.controllerId())
                         .setSortClass((Class<? extends Sort>) classInfo.loadClass()));
 
@@ -116,16 +116,16 @@ public class FilterAndSortInfoService {
         logger.info("Scanning for filters");
         this._filters = new ArrayList<FilterInfoInternal>();
         try (var scan = new ClassGraph().enableClassInfo()
-                                        .enableAnnotationInfo()
-                                        .scan()) {
+                .enableAnnotationInfo()
+                .scan()) {
             for (var classInfo : scan.getClassesWithAnnotation(FilterInfo.class)) {
                 var data = (FilterInfo) classInfo.getAnnotationInfo(FilterInfo.class.getCanonicalName())
-                                                 .loadClassAndInstantiate();
+                        .loadClassAndInstantiate();
                 logger.debug("Found filter: " + classInfo.loadClass()
-                                                         .getCanonicalName());
+                        .getCanonicalName());
                 this._filters.add(new FilterInfoInternal()
                         .setId((data.fieldName() + data.operation()
-                                                       .getValue()).toLowerCase())
+                                .getValue()).toLowerCase())
                         .setServiceId(data.serviceId())
                         .setFilterClass((Class<? extends Filter>) classInfo.loadClass()));
             }
@@ -146,8 +146,8 @@ public class FilterAndSortInfoService {
             sorts.forEach(item -> {
                 try {
                     result.put(item.getId(), item.getSortClass()
-                                                 .getDeclaredConstructor()
-                                                 .newInstance());
+                            .getDeclaredConstructor()
+                            .newInstance());
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                          NoSuchMethodException e) {
                     logger.error(
@@ -170,8 +170,8 @@ public class FilterAndSortInfoService {
             filters.forEach(item -> {
                 try {
                     result.put(item.getId(), item.getFilterClass()
-                                                 .getDeclaredConstructor(SearchSession.class, JinqStreamService.class)
-                                                 .newInstance(searchSession, streamService));
+                            .getDeclaredConstructor(SearchSession.class, JinqStreamService.class)
+                            .newInstance(searchSession, streamService));
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                          NoSuchMethodException e) {
                     logger.error(

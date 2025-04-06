@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class BookAuthorId implements Serializable{
+public class BookAuthorId implements Serializable {
     private Integer bookId;
     private Integer authorId;
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @ControllerInfo(mapper = AuthorMapper.class)
 @RequestMapping("/api/v1/authors")
-public class AuthorController extends CRUDController<Author,Integer,AuthorDto> {
+public class AuthorController extends CRUDController<Author, Integer, AuthorDto> {
     public AuthorController(CRUDService<Author, Integer> service) {
         super(service);
     }
