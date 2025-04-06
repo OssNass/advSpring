@@ -44,21 +44,21 @@ public class ReadOnlyController<Entity extends Deletable, ID, Dto> extends Logga
      * @param filter          the filter names
      * @param filterOperation the filter operations
      * @param filterValue     the filter values
-     * @param start            the start value of the pagination (when to start fetching)
-     * @param count            the count value of the pagination (the number of elements to fetch)
-     * @param sort             the name of the sorting method
+     * @param start           the start value of the pagination (when to start fetching)
+     * @param count           the count value of the pagination (the number of elements to fetch)
+     * @param sort            the name of the sorting method
      * @return a list of entities
      */
     @GetMapping
-    public List<Dto> all(@RequestParam(value = "filter",required = false) String[] filter,
-                         @RequestParam(value = "filterOperation",required = false)String[] filterOperation,
-                         @RequestParam(value = "filterValue",required = false)String[] filterValue,
-                         @RequestParam(value = "start",required = false)Long start,
-                         @RequestParam(value = "count",required = false)Long count,
-                         @RequestParam(value = "sort",required = false)String sort
+    public List<Dto> all(@RequestParam(value = "filter", required = false) String[] filter,
+                         @RequestParam(value = "filterOperation", required = false) String[] filterOperation,
+                         @RequestParam(value = "filterValue", required = false) String[] filterValue,
+                         @RequestParam(value = "start", required = false) Long start,
+                         @RequestParam(value = "count", required = false) Long count,
+                         @RequestParam(value = "sort", required = false) String sort
     ) {
         return service.all(filter, filterOperation, filterValue, start, count, sort).stream().map(mapper::fromEntity)
-                      .toList();
+                .toList();
     }
 
     /**
@@ -81,9 +81,9 @@ public class ReadOnlyController<Entity extends Deletable, ID, Dto> extends Logga
      * @return the number of entities
      */
     @GetMapping("/count")
-    public Long count(@RequestParam(value = "filter",required = false)String[] filter,
-                      @RequestParam(value = "filterOperation",required = false)String[] filterOperation,
-                      @RequestParam(value = "filterValue",required = false)String[] filterValue) {
+    public Long count(@RequestParam(value = "filter", required = false) String[] filter,
+                      @RequestParam(value = "filterOperation", required = false) String[] filterOperation,
+                      @RequestParam(value = "filterValue", required = false) String[] filterValue) {
         return service.count(filter, filterOperation, filterValue);
     }
 }
