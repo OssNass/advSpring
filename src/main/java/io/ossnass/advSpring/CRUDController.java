@@ -2,12 +2,9 @@ package io.ossnass.advSpring;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -46,6 +43,7 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
         if (this.controllerInfo.disableAdd())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
+
             return mapper.fromEntity(((CRUDService<Entity, ID>) service).save(mapper.fromDto(dto)));
         } catch (EntityExistsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
@@ -83,8 +81,9 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
      * @param id the id of the entity to delete
      * @throws ResponseStatusException with code 404 (not found) if the entity doesn't exist, code 500 if something goes wrong
      */
-    @DeleteMapping("/{id}")
-    public void delete(@PathParam("id") String id) {
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable("id") String id) {
+        Assert.notNull(id, "cannot delete a null id");
         if (this.controllerInfo.disableDelete())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {

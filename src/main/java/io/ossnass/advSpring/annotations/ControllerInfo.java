@@ -20,8 +20,6 @@ import java.lang.annotation.Target;
  *
  *             <li>{@link ControllerInfo#disableEdit()} to disable the editing of an existing entity, false by
  *             default</li>
- * <li>{@link ControllerInfo#disableSoftDelete()} to disable the  deleting of an existing entity, false by
- *             default</li>
  *             <li>{@link ControllerInfo#disableDelete()} to disable the  deleting of an existing entity, false by
  *             default</li>
  *         </ul>
@@ -60,11 +58,11 @@ public @interface ControllerInfo {
      */
     boolean disableDelete() default false;
 
-    /**
-     * true to disable soft delete, false to enable
-     *
-     * @return the status of batch deleting
-     */
-    boolean disableSoftDelete() default false;
+//    /**
+//     * true to disable soft delete, false to enable
+//     *
+//     * @return the status of batch deleting
+//     */
+//    boolean disableSoftDelete() default false;
 
 }

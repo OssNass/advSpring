@@ -8,7 +8,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.util.ResourceUtils;
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,10 +66,10 @@ public class AuthorTest {
             params.put("filter", "name");
             params.put("filterOperation", "equals");
             params.put("filterValue", name);
-            var res = restTemplate.getForObject(baseURI + "authors?filter={filter}&filterOperation={filterOperation}&filterValue={filterValue}", List.class, params);
+            var res = restTemplate.getForObject(baseURI + "authors?filter={filter}&filterOperation={filterOperation}&filterValue={filterValue}", AuthorDto[].class, params);
 
-            assertThat(res.size()).isEqualTo(1);
-            assertThat(((LinkedHashMap<?, ?>) res.get(0)).get("name")).isEqualTo(name);
+            assertThat(res.length).isEqualTo(1);
+            assertThat(res[0].name()).isEqualTo(name);
         }
     }
 
@@ -77,11 +79,10 @@ public class AuthorTest {
         var name = authrNames.get(3);
         var param = new HashMap<String, String>();
         param.put("id", "1");
-        var res = restTemplate.getForObject(baseURI + "authors/ones/{id}", List.class, param);
-        System.out.println(res.size());
-        var author = new AuthorDto(Integer.parseInt(((LinkedHashMap<?, ?>) res.get(0)).get("id").toString()), name, null);
+        var res = restTemplate.getForObject(baseURI + "authors/ones/{id}", AuthorDto[].class, param);
+        var author = new AuthorDto(res[0].id(), name, null);
         restTemplate.put(baseURI + "authors", author);
-        var res2 = restTemplate.getForObject(baseURI + "authors/ones/{id}", List.class, param);
-        assertThat(((ArrayList<LinkedHashMap<?, ?>>) res2).get(0).get("name")).isEqualTo(name);
+        var res2 = restTemplate.getForObject(baseURI + "authors/ones/{id}", AuthorDto[].class, param);
+        assertThat(res2[0].name()).isEqualTo(name);
     }
 }

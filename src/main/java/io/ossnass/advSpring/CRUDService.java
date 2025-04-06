@@ -1,9 +1,9 @@
 package io.ossnass.advSpring;
 
+import io.ossnass.advSpring.annotations.hooks.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import io.ossnass.advSpring.annotations.hooks.*;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
@@ -76,7 +76,7 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
     public Entity save(Entity e) {
         Assert.notNull(e, "entity to add cannot be null");
         var id = extractId(e);
-        if (id !=null && repository.existsById(id))
+        if (id != null && repository.existsById(id))
             throw new EntityExistsException();
         var preAddHooks = hooks.get(PreAdd.class);
         var postAddHooks = hooks.get(PostAdd.class);
@@ -121,7 +121,7 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
         if (postHooks != null && !postHooks.isEmpty()) {
             processHooks(updatedEntity, postHooks, objectsToPass);
         }
-        return updatedEntity;
+        return repository.findById(extractId(e)).get();
     }
 
 //    /**
@@ -151,15 +151,16 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
      */
     public void delete(Entity e) {
         Assert.notNull(e, "entity to delete cannot be null");
-        var entity = repository.findById(extractId(e));
-        var entityToDelete = entity.map(item -> processUpdate(item, e))
-                                   .orElseThrow(EntityNotFoundException::new);
+        var entityToDelete = repository.findById(extractId(e)).orElseThrow(EntityNotFoundException::new);
+//        var entityToDelete = entity.map(item -> processUpdate(item, e))
+//
         var preDeleteHooks = hooks.get(PreDelete.class);
         var postDeleteHooks = hooks.get(PostDelete.class);
         if (preDeleteHooks != null && !preDeleteHooks.isEmpty()) {
             processHooks(entityToDelete, preDeleteHooks, null);
         }
         repository.delete(entityToDelete);
+        repository.flush();
         if (postDeleteHooks != null && !postDeleteHooks.isEmpty()) {
             processHooks(entityToDelete, postDeleteHooks, null);
         }
@@ -206,7 +207,7 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
                 if (method.getParameterCount() == 2 && objectsToPass != null)
                     paramList.add(objectsToPass.get(key));
                 if (method.getReturnType().equals(Void.TYPE))
-                    method.invoke(this,paramList.toArray());
+                    method.invoke(this, paramList.toArray());
                 else {
                     var o = method.invoke(this, paramList.toArray());
                     if (objectsToPass != null)
@@ -230,6 +231,4 @@ public abstract class CRUDService<Entity extends Deletable, ID> extends ReadOnly
             }
         }
     }
-
-
 }
