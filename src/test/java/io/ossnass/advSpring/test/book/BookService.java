@@ -43,7 +43,7 @@ public class BookService extends CRUDService<Book, Integer> {
     }
 
     @Override
-    protected int idFieldCount() {
+    protected Integer idFieldCount() {
         return 1;
     }
 

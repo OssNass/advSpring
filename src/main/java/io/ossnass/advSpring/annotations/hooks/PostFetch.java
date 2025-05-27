@@ -12,6 +12,16 @@ import java.lang.annotation.Target;
  *
  * <p>
  * Useful to add manual postprocessing for fetched elements
+ *
+ * The function must have the following signature:
+ * <code>
+ *     public List<Entity> postFetch(List<Entity> items,boolean isAll)
+ * </code>
+ * where:
+ * <ul>
+ *     <li>items are the items fetched from the database</li>
+ *     <li>isAll true when called from {@link io.ossnass.advSpring.ReadOnlyService#all(String[], String[], String[], Long, Long, String)} and false when calling from {@link io.ossnass.advSpring.ReadOnlyService#getOnes(String)}} </li>
+ * </ul>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

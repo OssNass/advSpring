@@ -12,6 +12,11 @@ import java.lang.annotation.Target;
  *
  * <p>
  * Useful to add required filters. sometimes you need to insert filter based on user roles
+ *
+ * The function must have the following signature:
+ * <code>public void preFetch(FilterContainer filters)</code>
+ *
+ * Where {@link FilterContainer} is a type that encapsulate filter and all related data about the filters
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

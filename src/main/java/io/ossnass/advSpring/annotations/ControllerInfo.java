@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  *     <li>the type of the entity class</li>
  *     <li>the mapper to map from entity to dto</li>
  *     <li>
- *         THe following methods which allows ypu control the ability to enable add/batch add, edit/batch edit and
+ *         The following methods which allows you control the ability to enable add/batch add, edit/batch edit and
  *         delete/batch delete
  *         <ul>
  *             <li>{@link ControllerInfo#disableAdd()} to disable the adding of a new entity, false by default</li>

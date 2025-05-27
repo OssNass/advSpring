@@ -9,14 +9,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation must be placed on the class that implements the interface (@link Filter}.
+ * This annotation must be placed on the class that implements the interface (@link Sort}.
  * <p>
  * It contains 3 mandatory data inputs:
  * <ol>
  *     <li>the {@link SortInfo#fieldName()} to indicate the field on which the sort is applied (string only no code)
  *     </li>
  *     <li>the {@link SortInfo#sortingDirection()} ()}, combined with the filed name it creates the sort Id</li>
- *     <li>the {@link SortInfo#controllerId()} linking this sort to a controller by using {@link ServiceInfo#id()}
+ *     <li>the {@link SortInfo#serviceId()} linking this sort to a controller by using {@link ServiceInfo#id()}
  *     field</li>
  * </ol>
  */
@@ -38,9 +38,9 @@ public @interface SortInfo {
     SortingDirection sortingDirection();
 
     /**
-     * The controller to which this filter is linked
+     * The service to which this filter is linked
      *
-     * @return The controller to which this filter is linked
+     * @return The service to which this filter is linked
      */
-    String controllerId();
+    String serviceId();
 }

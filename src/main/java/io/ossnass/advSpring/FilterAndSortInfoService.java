@@ -102,7 +102,7 @@ public class FilterAndSortInfoService {
                 this._sorts.add(new SortInfoInternal()
                         .setId((data.fieldName() + data.sortingDirection()
                                 .getValue()).toLowerCase())
-                        .setControllerId(data.controllerId())
+                        .setControllerId(data.serviceId())
                         .setSortClass((Class<? extends Sort>) classInfo.loadClass()));
 
             }
