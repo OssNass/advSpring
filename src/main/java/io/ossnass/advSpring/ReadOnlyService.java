@@ -516,7 +516,7 @@ public abstract class ReadOnlyService<Entity extends Deletable, Id> extends Logg
      *
      * @return the amount of fields in the id class
      */
-    protected abstract int idFieldCount();
+    protected abstract Integer idFieldCount();
 
 
     /**

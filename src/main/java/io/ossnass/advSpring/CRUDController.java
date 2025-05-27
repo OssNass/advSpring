@@ -3,6 +3,7 @@ package io.ossnass.advSpring;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,12 +40,12 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
      * @return the created entity, error 409 (conflict) if the entity already exists, error 500 if something goes wrong
      */
     @PostMapping
-    public Dto post(@RequestBody Dto dto) {
+    public ResponseEntity post(@RequestBody Dto dto) {
         if (this.controllerInfo.disableAdd())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
 
-            return mapper.fromEntity(((CRUDService<Entity, ID>) service).save(mapper.fromDto(dto)));
+            return ResponseEntity.ok(mapper.fromEntity(((CRUDService<Entity, ID>) service).save(mapper.fromDto(dto))));
         } catch (EntityExistsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         } catch (Exception e) {
@@ -61,11 +62,11 @@ public class CRUDController<Entity extends Deletable, ID, Dto> extends ReadOnlyC
      * @return the edited entity, error 404 (not found) if the entity doesn't exist, error 500 if something goes wrong
      */
     @PutMapping
-    public Dto put(@RequestBody Dto dto) {
+    public ResponseEntity put(@RequestBody Dto dto) {
         if (this.controllerInfo.disableEdit())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         try {
-            return mapper.fromEntity(((CRUDService<Entity, ID>) service).edit(mapper.fromDto(dto)));
+            return ResponseEntity.ok(mapper.fromEntity(((CRUDService<Entity, ID>) service).edit(mapper.fromDto(dto))));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (Exception e) {

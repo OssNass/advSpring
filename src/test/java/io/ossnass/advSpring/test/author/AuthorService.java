@@ -45,7 +45,7 @@ public class AuthorService extends CRUDService<Author, Integer> {
     }
 
     @Override
-    protected int idFieldCount() {
+    protected Integer idFieldCount() {
         return 1;
     }
 }
